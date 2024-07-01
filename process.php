@@ -246,28 +246,23 @@ if (isset($_POST['add_emprestimo'])) {
     }
 }
 
-// Função para enviar e-mails usando PHPMailer
 function enviarEmail($aluno_email, $aluno_nome, $prateleira, $data_emprestimo) {
     $mail = new PHPMailer(true);
 
     try {
-        // Configurações do servidor
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'rochagama.at03@gmail.com';
-        $mail->Password = 'uilb xaxq fzyf qted'; // Substitua pela sua senha do Mailtrap
+        $mail->Password = 'uilb xaxq fzyf qted'; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = 465;
 
-                // Definir o charset para UTF-8
                 $mail->CharSet = 'UTF-8';
 
-                // Remetente e destinatário
-                $mail->setFrom('rochagama.at03@gmail.com', 'Atilla'); // Certifique-se de usar um endereço de e-mail válido
+                $mail->setFrom('rochagama.at03@gmail.com', 'Atilla'); 
                 $mail->addAddress($aluno_email, $aluno_nome);
         
-                // Conteúdo do email
                 $mail->isHTML(true);
                 $mail->Subject = 'Lembrete de Devolução de Chave';
                 $mail->Body    = "Olá $aluno_nome,<br><br>Este é um lembrete para devolver a chave que está na prateleira $prateleira, emprestada no dia $data_emprestimo.<br><br>Obrigado!";
@@ -284,7 +279,6 @@ function enviarEmail($aluno_email, $aluno_nome, $prateleira, $data_emprestimo) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'send_email') {
     $emprestimo_id = $_POST['emprestimo_id'];
 
-    // Buscar informações do empréstimo e do aluno
     $sql = "SELECT e.chave_id, e.data_emprestimo, a.nome, a.email FROM emprestimos e JOIN alunos a ON e.aluno_cpf = a.cpf WHERE e.id = '$emprestimo_id'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
@@ -294,7 +288,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
         $chave_id = $emprestimo['chave_id'];
         $data_emprestimo = $emprestimo['data_emprestimo'];
 
-        // Enviar email
+
         $response = enviarEmail($aluno_email, $aluno_nome, $chave_id, $data_emprestimo);
         echo $response;
     } else {
